@@ -1,0 +1,12 @@
+{
+  "db": {
+    "driver": "mysql",
+    "host": "",
+    "database": "",
+    "username": "",
+    "password": "",
+    "charset": "",
+    "collation": "",
+    "prefix": ""
+  }
+}
