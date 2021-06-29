@@ -1,5 +1,15 @@
 {
-  "db": {
+  "web_db": {
+    "driver": "mysql",
+    "host": "",
+    "database": "",
+    "username": "",
+    "password": "",
+    "charset": "",
+    "collation": "",
+    "prefix": ""
+  },
+  "stats_db": {
     "driver": "mysql",
     "host": "",
     "database": "",

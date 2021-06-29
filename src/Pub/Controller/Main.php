@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace App\Pub\Controller;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
-class MainController extends AbstractController
+class Main extends AbstractController
 {
     /**
      * @throws \Twig\Error\SyntaxError

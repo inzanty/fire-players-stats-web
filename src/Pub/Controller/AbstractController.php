@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Pub\Controller;
 
 use DI\Container;
 use Slim\Views\Twig;
