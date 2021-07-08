@@ -11,10 +11,12 @@ namespace App;
 use App\Core\Config\Manager;
 use App\Core\DependencyProvider;
 use App\Route\Register;
-use DI\Container;
+use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Views\TwigMiddleware;
 use DI\ContainerBuilder;
+use DI\Container;
+use PDO;
 
 class Application
 {
@@ -27,6 +29,11 @@ class Application
      * @var int
      */
     public static $time = 0;
+
+    /**
+     * @var \Slim\App
+     */
+    public static $app;
 
     /**
      * @var Container
@@ -47,6 +54,8 @@ class Application
      */
     public function boot()
     {
+        session_start();
+
         $config = new Manager();
 
         $dependencyProvider = (new DependencyProvider($config))->register();
@@ -56,23 +65,26 @@ class Application
         $container = $containerBuilder->build();
 
         $app = AppFactory::createFromContainer($container);
+        $this->setDefaultVariableValues($container, $app);
         $app->add(TwigMiddleware::createFromContainer($app));
         $app->group('', Register::class);
         $app->run();
-
-        $this->setDefaultVariableValues($container);
     }
 
     /**
-     * @param $container
+     * @param Container $container
+     * @param App $app
      */
-    public function setDefaultVariableValues($container)
+    public function setDefaultVariableValues(Container $container, App $app)
     {
+        self::$app = $app;
         self::$container = $container;
         self::$time = time();
     }
 
     /**
+     * @param $class
+     * @return mixed
      * @throws \Exception
      */
     public static function repository($class)
@@ -85,5 +97,32 @@ class Application
         }
 
         throw new \Exception(sprintf("Repository class %s didn't exists", $repository));
+    }
+
+    /**
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public static function getWebDb()
+    {
+        return self::$container->get('web_db');
+    }
+
+    public static function getStatsDb()
+    {
+        return self::$container->get('stats_db');
+    }
+
+    /**
+     * @return App
+     */
+    public static function getInstance(): App
+    {
+        return self::$app;
+    }
+
+    public static function getConfig()
+    {
+        return self::$container->get('config');
     }
 }

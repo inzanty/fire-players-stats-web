@@ -15,5 +15,7 @@ class Register
     public function __invoke(RouteCollectorProxy $group)
     {
         $group->get('/', 'App\Pub\Controller\Main:actionIndex');
+        $group->get('/auth', 'App\Pub\Controller\Auth:actionLogin');
+        $group->get('/auth/exit', 'App\Pub\Controller\Auth:actionExit');
     }
 }

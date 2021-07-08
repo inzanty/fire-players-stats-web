@@ -24,9 +24,13 @@ abstract class AbstractRepository
      */
     protected $statsDb;
 
+    /**
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
     public function __construct()
     {
-        $this->webDb = Application::$container->get('web_db');
-        $this->statsDb = Application::$container->get('stats_db');
+        $this->webDb = Application::getWebDb();
+        $this->statsDb = Application::getStatsDb();
     }
 }

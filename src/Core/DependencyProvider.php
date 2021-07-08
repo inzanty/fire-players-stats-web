@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Core\Config\Manager;
 use Slim\Views\Twig;
+use PDO;
 
 class DependencyProvider
 {
@@ -31,11 +32,11 @@ class DependencyProvider
 
             'web_db' => function () {
                 $config = $this->config->get('web_db');
-                return new \PDO(
+                return new PDO(
                     sprintf(
                         'mysql:dbname=%s;host=%s;port=%s',
                         $config['database'],
-                        $config['host'],
+                        $config['hostname'],
                         $config['port']
                     ),
                     $config['username'],
@@ -45,11 +46,11 @@ class DependencyProvider
 
             'stats_db' => function () {
                 $config = $this->config->get('stats_db');
-                return new \PDO(
+                return new PDO(
                     sprintf(
                         'mysql:dbname=%s;host=%s;port=%s',
                         $config['database'],
-                        $config['host'],
+                        $config['hostname'],
                         $config['port']
                     ),
                     $config['username'],
@@ -58,7 +59,9 @@ class DependencyProvider
             },
 
             'view' => function () {
-                return Twig::create('templates', ['templates/cache']);
+                $twig = Twig::create('templates', ['templates/cache']);
+                $twig->getEnvironment()->addGlobal('session', $_SESSION);
+                return $twig;
             }
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Pub\Controller;
 
+use App\Application;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -14,6 +15,6 @@ class Main extends AbstractController
      */
     public function actionIndex(Request $request, Response $response, $args = []): \Psr\Http\Message\ResponseInterface
     {
-        return $this->view->render($response, 'test.twig');
+        return $this->view->render($response, 'main/index.html.twig');
     }
 }
