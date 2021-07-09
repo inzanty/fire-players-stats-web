@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * FPS Web Interface
+ * Year: 2021
+ * Author: inzanty (inzanty@gmail.com)
+ */
+
 namespace App\Core;
 
 use App\Core\Config\Manager;
@@ -32,7 +38,7 @@ class DependencyProvider
 
             'web_db' => function () {
                 $config = $this->config->get('web_db');
-                return new PDO(
+                $pdo = new PDO(
                     sprintf(
                         'mysql:dbname=%s;host=%s;port=%s',
                         $config['database'],
@@ -42,11 +48,14 @@ class DependencyProvider
                     $config['username'],
                     $config['password']
                 );
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+                return $pdo;
             },
 
             'stats_db' => function () {
                 $config = $this->config->get('stats_db');
-                return new PDO(
+                $pdo = new PDO(
                     sprintf(
                         'mysql:dbname=%s;host=%s;port=%s',
                         $config['database'],
@@ -56,6 +65,9 @@ class DependencyProvider
                     $config['username'],
                     $config['password']
                 );
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+                return $pdo;
             },
 
             'view' => function () {

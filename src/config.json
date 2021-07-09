@@ -1,16 +1,16 @@
 {
   "web_db": {
-    "host": "",
-    "database": "",
-    "username": "",
+    "host": "127.0.0.1",
+    "database": "fps_web",
+    "username": "root",
     "password": "",
-    "port": ""
+    "port": "3306"
   },
   "stats_db": {
-    "host": "",
-    "database": "",
-    "username": "",
+    "host": "127.0.0.1",
+    "database": "fps",
+    "username": "root",
     "password": "",
-    "port": ""
+    "port": "3306"
   }
 }

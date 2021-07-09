@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.html.twig' as macros %}
+
+{% block body %}
+    <div class="container-fluid">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Hostname</th>
+                <th scope="col">IP</th>
+                <th scope="col">Connect</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for server in servers %}
+                <tr>
+                    <td>{{ server.server_name }}</td>
+                    <td>{{ server.server_ip }}</td>
+                    <td><a href="steam://connect/{{ server.server_ip }}">Join</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if pagination.needed %}
+            {{ macros.paginator(pagination) }}
+        {% endif %}
+    </div>
+{% endblock %}

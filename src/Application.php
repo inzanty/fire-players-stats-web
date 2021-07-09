@@ -54,6 +54,8 @@ class Application
      */
     public function boot()
     {
+        // to avoid slim conflict
+        session_cache_limiter(false);
         session_start();
 
         $config = new Manager();
@@ -89,17 +91,16 @@ class Application
      */
     public static function repository($class)
     {
-        $repository = sprintf("App\\Repository\\%s", $class);
-
-        if (class_exists($repository))
+        if (class_exists($class))
         {
-            return new $repository();
+            return new $class();
         }
 
-        throw new \Exception(sprintf("Repository class %s didn't exists", $repository));
+        throw new \Exception(sprintf("Repository class %s didn't exists", $class));
     }
 
     /**
+     * @return PDO
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      */
@@ -108,6 +109,11 @@ class Application
         return self::$container->get('web_db');
     }
 
+    /**
+     * @return PDO
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
     public static function getStatsDb()
     {
         return self::$container->get('stats_db');

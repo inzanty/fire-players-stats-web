@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * FPS Web Interface
+ * Year: 2021
+ * Author: inzanty (inzanty@gmail.com)
+ */
+
 namespace App\Repository;
 
 class User extends AbstractRepository
@@ -36,9 +42,6 @@ class User extends AbstractRepository
         $stmt->bindParam(":steam_id", $user['steam_id']);
         $stmt->execute();
 
-        return [
-            'nickname' => $stmt->nickname,
-            'steam_id' => $stmt->steam_id
-        ] ;
+        return $this->getUser($user['steam_id']);
     }
 }
