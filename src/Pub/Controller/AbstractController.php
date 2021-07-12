@@ -3,6 +3,7 @@
 namespace App\Pub\Controller;
 
 use DI\Container;
+use GuzzleHttp\Psr7\Response;
 use Slim\Views\Twig;
 
 abstract class AbstractController

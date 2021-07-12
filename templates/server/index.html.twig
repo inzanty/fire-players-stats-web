@@ -2,27 +2,57 @@
 {% import 'macros.html.twig' as macros %}
 
 {% block body %}
-    <div class="container-fluid">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Hostname</th>
-                <th scope="col">IP</th>
-                <th scope="col">Connect</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for server in servers %}
-                <tr>
-                    <td>{{ server.server_name }}</td>
-                    <td>{{ server.server_ip }}</td>
-                    <td><a href="steam://connect/{{ server.server_ip }}">Join</a></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% if pagination.needed %}
-            {{ macros.paginator(pagination) }}
-        {% endif %}
-    </div>
+    <template>
+        <v-row class="d-flex" align="start" justify="center">
+            <v-col cols="12">
+                <template>
+                    <v-card dark color="rgba(32, 42, 55, 0.5)">
+                        <v-card-title class="text-uppercase">
+                            Наши Сервера
+                        </v-card-title>
+
+                        <v-container fluid>
+                            <v-row justify="center">
+                                <v-col cols="12" lg="12">
+                                    {% for server in servers %}
+                                        <v-card>
+                                            <v-img height="200px" class="">
+                                                <v-row class="fill-height">
+                                                    <v-col cols="12">
+                                                        <v-card-title>
+                                                            {{ server.server_name }}
+                                                            <v-spacer></v-spacer>
+                                                        </v-card-title>
+                                                    </v-col>
+                                                    <v-col cols="12" class="py-0">
+                                                        <v-row class="fill-height" align="end">
+                                                            <v-col cols="6" class="pa-0">
+                                                                <v-btn href="steam://connect/{{ server.server_ip }}" tile block text>
+                                                                    <v-icon>
+                                                                        mdi-play-circle
+                                                                    </v-icon>
+                                                                </v-btn>
+                                                            </v-col>
+                                                            <v-col cols="6" class="pa-0">
+                                                                <v-btn tile block text>
+                                                                    <v-icon>
+                                                                        mdi-content-copy
+                                                                    </v-icon>
+                                                                </v-btn>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-img>
+                                        </v-card>
+                                        <br />
+                                    {% endfor %}
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card>
+                </template>
+            </v-col>
+        </v-row>
+    </template>>
 {% endblock %}

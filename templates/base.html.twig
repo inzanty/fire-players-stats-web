@@ -4,66 +4,129 @@
     <meta charset="UTF-8">
     <title>Test</title>
     {% block stylesheets %}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
         <link href="{{ base_path() }}assets/css/index.css" rel="stylesheet">
-    {% endblock %}
-
-    {% block javascripts %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Test</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Главная</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Статистика</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Сервера</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown link
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        {% if (session.nickname != '') and (session.steam_id != '') %}
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                    Мой профиль...
-                </button>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                    <li><a class="dropdown-item" href="https://steamcommunity.com/profiles/{{ session.steam_id }}">{{ session.nickname }}</a></li>
-                    <li><a class="dropdown-item" href="#">Моя статистика</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="auth/exit">Выход</a></li>
-                </ul>
-            </div>
-        {% else %}
-            <a href="auth" class="btn btn-outline-success my-2 my-sm-0" type="submit">Вход через Steam</a>
-        {% endif %}
-    </div>
-</nav>
-{% block body %}{% endblock %}
-<footer class="footer">
-    <div class="container">
-        <span class="text-muted">Copyright © <a href="https://github.com/inzanty">inzanty</a> (2021)</span>
-    </div>
-</footer>
+
+<div id="app">
+    <v-app
+            style="background-image: url(https://million-wallpapers.ru/wallpapers/2/88/474971843067839.jpg) !important;background-repeat: no-repeat;background-position: center center;background-attachment: fixed;background-size: cover;">
+        <template>
+            <v-navigation-drawer :right="this.$vuetify.rtl" floating permanent expand-on-hover dark
+                                 color="rgb(32, 42, 55)" app>
+                <v-list>
+                    <v-list-item class="pa-0">
+                        <v-list-item-avatar size="100%">
+                            <v-img
+                                    src="">
+                            </v-img>
+                        </v-list-item-avatar>
+                    </v-list-item>
+                </v-list>
+
+                <v-divider></v-divider>
+
+                <v-list subheader>
+                    <v-list-item href="/" link>
+                        <v-list-item-icon>
+                            <v-icon>
+                                mdi-home
+                            </v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Главная
+                        </v-list-item-title>
+                    </v-list-item>
+                    <v-list-item href="/servers" link>
+                        <v-list-item-icon>
+                            <v-badge dot color="green">
+                                <v-icon>
+                                    mdi-server
+                                </v-icon>
+                            </v-badge>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Сервера
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-navigation-drawer>
+        </template>
+
+        <template>
+            <v-app-bar dense dark color="rgb(32, 42, 55)" app>
+                <v-spacer></v-spacer>
+                {% if (session.nickname != '') and (session.steam_id != '') %}
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn text dark v-on="on">
+                                {{ session.nickname }}
+                            </v-btn>
+                        </template>
+
+                        <v-list subheader>
+                            <v-list-item href="/profile" link>
+                                <v-list-item-title>
+                                    Профиль
+                                </v-list-item-title>
+                            </v-list-item>
+                            <v-list-item href="/auth/exit" link>
+                                <v-list-item-title>Выйти</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                {% else %}
+                    <v-btn text href="/auth">
+                        <v-icon>
+                            mdi-steam
+                        </v-icon>
+                    </v-btn>
+                {% endif %}
+            </v-app-bar>
+        </template>
+
+        <v-main>
+            <v-container fluid>
+                {% block body %}{% endblock %}
+                <template>
+                    <v-footer color="transparent">
+                        <v-card tile flat width="100%" color="transparent" class="text-center">
+                            <v-row align="center" justify="center">
+                                <v-col cols="12" class="grey--text">
+                                    FPS Web Interface by inzanty
+                                    <br>
+                                    Все права защищены © 2020
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-footer>
+                </template>
+            </v-container>
+        </v-main>
+    </v-app>
+</div>
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://unpkg.com/vue-typer/dist/vue-typer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"
+            integrity="sha256-T/f7Sju1ZfNNfBh7skWn0idlCBcI3RwdLSS4/I7NQKQ=" crossorigin="anonymous"></script>
+{% endblock %}
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        delimiters: [
+            "###", "###"
+        ],
+        vuetify: new Vuetify(),
+        components: { 'vue-typer': window.VueTyper.VueTyper }
+    });
+</script>
 </body>
 </html>

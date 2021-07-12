@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <template>
+        <v-data-table style="background-color: rgba(32, 42, 55, 0.5);" dark :headers="headers" :items="tableItems"
+                      class="elevation-1">
+            <template v-slot:item.username="{item}">
+                <v-avatar size="32">
+                    <v-img contain :src="item.user.avatar">
+                    </v-img>
+                </v-avatar>
+                ### item.user.username ###
+            </template>
+            <template v-slot:item.rank="{item}">
+                <v-avatar size="64" tile>
+                    <v-img contain :src="item.rank">
+                    </v-img>
+                </v-avatar>
+            </template>
+        </v-data-table>
+    </template>
+{% endblock %}

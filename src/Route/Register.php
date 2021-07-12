@@ -18,5 +18,7 @@ class Register
         $group->get('/auth', 'App\Pub\Controller\Auth:actionLogin');
         $group->get('/auth/exit', 'App\Pub\Controller\Auth:actionExit');
         $group->get('/servers', 'App\Pub\Controller\Server:actionIndex');
+        $group->get('/profile', 'App\Pub\Controller\Profile:actionIndex');
+        $group->get('/stats', 'App\Pub\Controller\Stats:actionIndex');
     }
 }

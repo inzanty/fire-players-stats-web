@@ -42,7 +42,7 @@ class DependencyProvider
                     sprintf(
                         'mysql:dbname=%s;host=%s;port=%s',
                         $config['database'],
-                        $config['hostname'],
+                        $config['host'],
                         $config['port']
                     ),
                     $config['username'],
@@ -59,7 +59,7 @@ class DependencyProvider
                     sprintf(
                         'mysql:dbname=%s;host=%s;port=%s',
                         $config['database'],
-                        $config['hostname'],
+                        $config['host'],
                         $config['port']
                     ),
                     $config['username'],
