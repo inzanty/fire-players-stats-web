@@ -3,3 +3,6 @@
     <br />
     Fire Players Stats (WEB)
 </h1>
+
+### Ссылки на загрузку (Url for download):
+- **[WEB](https://github.com/inzanty/fire-players-stats-web/releases/)**
