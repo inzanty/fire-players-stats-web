@@ -26,6 +26,7 @@ class Player extends AbstractRepository
                    SUM(fps_servers_stats.kills) AS kills, 
                    SUM(fps_servers_stats.deaths) AS deaths, 
                    SUM(fps_servers_stats.assists) AS assists,
+                   SUM(fps_weapons_stats.hits_head + fps_weapons_stats.hits_chest + fps_weapons_stats.hits_left_arm + fps_weapons_stats.hits_right_arm + fps_weapons_stats.hits_left_leg + fps_weapons_stats.hits_right_leg) AS hits,
                    SUM(fps_weapons_stats.hits_head) AS hits_head,
                    SUM(fps_weapons_stats.hits_chest) AS hits_chest,
                    SUM(fps_weapons_stats.hits_left_arm) AS hits_left_arm,
