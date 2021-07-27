@@ -8,9 +8,8 @@
 
 namespace App\Pub\Controller;
 
-use App\Application;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class Main extends AbstractController
 {

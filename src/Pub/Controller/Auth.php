@@ -12,8 +12,8 @@ use App\Application;
 use App\Repository\User;
 use App\Util\Api\Steam;
 use ErrorException;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use LightOpenID;
 
 class Auth extends AbstractController
@@ -28,6 +28,7 @@ class Auth extends AbstractController
         $openId = new LightOpenID(
             sprintf("%s://%s", $request->getUri()->getScheme(), $request->getUri()->getHost())
         );
+
         if (!$openId->mode)
         {
             $openId->identity = self::STEAM_URL;
@@ -39,19 +40,25 @@ class Auth extends AbstractController
             $ptn = "/^https?:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/";
             preg_match($ptn, $id, $matches);
 
+            $steamInstance = new Steam();
+
             /** @var User $playerRepository */
             $playerRepository = Application::repository(User::class);
             $player = $playerRepository->getUser($matches[1]);
             if (!$player)
             {
+                $profileData = $steamInstance->getProfileDataById($matches[1]);
                 $player = $playerRepository->createUser([
-                    'nickname' => (new Steam())->getNicknameById($matches[1]),
-                    'steam_id' => $matches[1]
+                    'nickname' => $profileData['nickname'],
+                    'steam_id' => $matches[1],
+                    'avatar_icon' => $profileData['avatar_icon'],
+                    'avatar_full' => $profileData['avatar_full']
                 ]);
             }
 
             $_SESSION['nickname'] = $player[0]['nickname'];
             $_SESSION['steam_id'] = $player[0]['steam_id'];
+            $_SESSION['avatar_icon'] = $player[0]['avatar_icon'];
 
             return $response->withHeader('Location', '/');
         }

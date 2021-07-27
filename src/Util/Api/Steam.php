@@ -12,11 +12,34 @@ class Steam
 {
     /**
      * @param $id
-     * @return false|\SimpleXMLElement
+     * @return false|string
      */
-    public function getNicknameById($id)
+    public function isValid($id)
+    {
+        try
+        {
+            $steamId = new \SteamID($id);
+            $steamId->IsValid();
+
+            return $steamId->ConvertToUInt64();
+        }
+        catch (\InvalidArgumentException $e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @param $id
+     * @return array|false
+     */
+    public function getProfileDataById($id)
     {
         $xml = simplexml_load_file(sprintf("https://steamcommunity.com/profiles/%s/?xml=1", $id));
-        return !empty($xml) ? $xml->steamID : false;
+        return !empty($xml) ? [
+            'nickname' => $xml->steamID,
+            'avatar_icon' => $xml->avatarMedium,
+            'avatar_full' => $xml->avatarFull
+        ] : false;
     }
 }

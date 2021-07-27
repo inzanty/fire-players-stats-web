@@ -53,6 +53,16 @@
                             Сервера
                         </v-list-item-title>
                     </v-list-item>
+                    <v-list-item href="/stats" link>
+                        <v-list-item-icon>
+                            <v-icon>
+                                mdi-account-group
+                            </v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Статистика игроков
+                        </v-list-item-title>
+                    </v-list-item>
                 </v-list>
             </v-navigation-drawer>
         </template>
@@ -64,12 +74,17 @@
                     <v-menu offset-y>
                         <template v-slot:activator="{ on }">
                             <v-btn text dark v-on="on">
+                                <v-avatar class="mr-1" size="30px">
+                                    <v-img
+                                            src="{{ session.avatar_icon }}">
+                                    </v-img>
+                                </v-avatar>
                                 {{ session.nickname }}
                             </v-btn>
                         </template>
 
                         <v-list subheader>
-                            <v-list-item href="/profile" link>
+                            <v-list-item href="/profile?steam_id={{ session.steam_id }}" link>
                                 <v-list-item-title>
                                     Профиль
                                 </v-list-item-title>
@@ -125,7 +140,14 @@
             "###", "###"
         ],
         vuetify: new Vuetify(),
-        components: { 'vue-typer': window.VueTyper.VueTyper }
+        components: {
+            'vue-typer': window.VueTyper.VueTyper
+        },
+        data: {
+            tab001: null,
+            tab002: null,
+            test: true
+        },
     });
 </script>
 </body>

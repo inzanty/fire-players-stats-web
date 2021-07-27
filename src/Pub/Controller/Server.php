@@ -11,8 +11,8 @@ namespace App\Pub\Controller;
 use App\Application;
 use App\Repository\Server as ServerRepository;
 use App\Util\Api\Steam;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class Server extends AbstractController
 {

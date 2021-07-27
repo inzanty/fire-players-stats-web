@@ -1,86 +1,170 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<v-row>
-    <v-col class="py-0" cols="12" lg="8">
-        <v-row>
-            <v-col cols="12" lg="8">
-                <template>
-                    <v-card dark color="rgba(32, 42, 55, 0.5)">
-                        <v-list dark color="transparent">
-                            <v-list-item class="flex-wrap">
-                                <v-list-item-content>
-                                    <v-card-title class="ml-0 mb-0">
-                                        {{ session.nickname }}
-                                        <v-spacer></v-spacer>
-                                        <country-flag country="ua" />
-                                    </v-card-title>
-                                </v-list-item-content>
-                                <v-list-item-action>
-                                    <v-btn icon href="https://steamcommunity.com/profiles/{{ session.steam_id }}">
-                                        <v-icon>
-                                            mdi-steam
-                                        </v-icon>
-                                    </v-btn>
-                                </v-list-item-action>
-                            </v-list-item>
-                        </v-list>
-                    </v-card>
-                </template>
-            </v-col>
-            <v-col cols="12" sm="4" lg="2">
-                <template>
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-card v-on="on" v-ripple="{ center: true }" link height="100%"
-                                    class="d-flex flex-wrap justify-center align-center" dark color="rgba(32, 42, 55, 0.5)">
-                                <v-avatar tile size="80%">
-                                    <v-img contain src="http://csgo.creed-games.net/images/ranks/18.png">
-                                    </v-img>
-                                </v-avatar>
-                            </v-card>
-                        </template>
-                        <span>200.000 очков</span>
-                    </v-tooltip>
-                </template>
-            </v-col>
-            <v-col cols="12" sm="4" lg="2">
-                <template>
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-card v-on="on" v-ripple="{ center: true }" link height="100%"
-                                    class="d-flex flex-wrap justify-center align-center" dark color="rgba(32, 42, 55, 0.5)">
-                                <v-avatar tile size="80%">
-                                    <v-img contain src="../../../public/images/FaceItLevelX.png">
-                                    </v-img>
-                                </v-avatar>
-                            </v-card>
-                        </template>
-                        <span>2000 ELO</span>
-                    </v-tooltip>
-                </template>
-            </v-col>
-            <v-col cols="12" lg="12">
-                <template>
-                    <v-card dark color="rgba(32, 42, 55, 0.5)">
-                        <v-tabs grow background-color="transparent" color="primary" dark>
-                            <v-tab>
-                                Общая Статистика
-                            </v-tab>
-                            <v-tab>
-                                Статистика Необычных Убийств
-                            </v-tab>
+    <v-row>
+        <v-col class="py-4" cols="12" lg="8">
+            <v-row>
+                <v-col cols="12" lg="8">
+                    <template>
+                        <v-card dark color="rgba(32, 42, 55, 0.5)">
+                            <v-list dark color="transparent">
+                                <v-list-item class="flex-wrap">
+                                    <v-list-item-avatar size="135px">
+                                        <v-avatar size="135px" class="mr-2">
+                                            <v-img
+                                                    src="{{ avatar }}">
+                                            </v-img>
+                                        </v-avatar>
+                                    </v-list-item-avatar>
+                                    <v-list-item-content>
+                                        <v-card-title class="ml-0 mb-0">
+                                            {{ session.nickname }}
+                                        </v-card-title>
+                                        <v-card-subtitle v-if="test">
+                                            <v-btn icon>
+                                                <v-icon>
+                                                    mdi-steam
+                                                </v-icon>
+                                            </v-btn>
+                                        </v-card-subtitle>
+                                    </v-list-item-content>
+                                    <v-list-item-action v-if="!test">
+                                        <v-btn icon>
+                                            <v-icon>
+                                                mdi-steam
+                                            </v-icon>
+                                        </v-btn>
+                                    </v-list-item-action>
+                                    <v-list-item-action v-if="!test">
+                                        <v-btn icon>
+                                            <v-icon>
+                                                mdi-vk
+                                            </v-icon>
+                                        </v-btn>
+                                    </v-list-item-action>
+                                </v-list-item>
+                            </v-list>
+                        </v-card>
+                    </template>
+                </v-col>
+                <v-col cols="12" lg="12">
+                    <template>
+                        <v-card dark color="rgba(32, 42, 55, 0.5)">
+                            <v-tabs grow v-model="tab001" background-color="transparent" color="primary" dark>
+                                <v-tab>
+                                    Общая Статистика
+                                </v-tab>
+                                <v-tab>
+                                    Статистика Необычных Убийств
+                                </v-tab>
 
-                            <v-tabs-items style="background-color: rgba(32, 42, 55, 0);" dark>
-                                <v-tab-item>
-                                    <v-card tile outlined color="transparent">
+                                <v-tabs-items style="background-color: rgba(32, 42, 55, 0);" dark v-model="tab001">
+                                    <v-tab-item>
+                                        <v-card tile outlined color="transparent">
+                                            <v-row class="px-3">
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Побед</v-list-item-title>
+                                                                <v-list-item-subtitle>
+                                                                    {% if (stats.round_win != 0) and (stats.round_lose != 0) %}
+                                                                        {{ ((stats.round_win * 100) / (stats.round_win + stats.round_lose))|round }}%
+                                                                    {% endif %}
+                                                                </v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Проведенное время на сервере</v-list-item-title>
+                                                                <v-list-item-subtitle>
+                                                                    {% if (stats.playtime != 0) %}
+                                                                        {{ (stats.playtime / 3600)|round }} часа/часов
+                                                                    {% endif %}
+                                                                </v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Убийств</v-list-item-title>
+                                                                <v-list-item-subtitle>{{ stats.kills }}</v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Выиграных раундов</v-list-item-title>
+                                                                <v-list-item-subtitle>{{ stats.round_win }}</v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Смертей</v-list-item-title>
+                                                                <v-list-item-subtitle>{{ stats.deaths }}</v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Проигранных раундов</v-list-item-title>
+                                                                <v-list-item-subtitle>{{ stats.round_lose }}</v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Ассистов</v-list-item-title>
+                                                                <v-list-item-subtitle>{{ stats.assists }}</v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col class="pa-0" cols="12" lg="6">
+                                                    <v-list nav class="text-center" color="transparent">
+                                                        <v-list-item link>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>K/D</v-list-item-title>
+                                                                <v-list-item-subtitle>
+                                                                    {% if (stats.kills != 0) and (stats.assists != 0) and (stats.deaths != 0) %}
+                                                                        {{ ((stats.kills + stats.assists) / stats.deaths)|round }}
+                                                                    {% endif %}
+                                                                </v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-col>
+                                            </v-row>
+                                        </v-card>
+                                    </v-tab-item>
+                                    <v-tab-item>
                                         <v-row class="px-3">
                                             <v-col class="pa-0" cols="12" lg="6">
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>Место в топе</v-list-item-title>
-                                                            <v-list-item-subtitle>#1</v-list-item-subtitle>
+                                                            <v-list-item-title>Первых убийств</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_op }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
@@ -89,8 +173,8 @@
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>Баланс</v-list-item-title>
-                                                            <v-list-item-subtitle>1000 Руб</v-list-item-subtitle>
+                                                            <v-list-item-title>Убийств через препятствие</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_penetrated }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
@@ -99,8 +183,8 @@
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>Убийств</v-list-item-title>
-                                                            <v-list-item-subtitle>100</v-list-item-subtitle>
+                                                            <v-list-item-title>Убийств без прицела</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_noscope }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
@@ -109,8 +193,8 @@
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>Убийств в Голову</v-list-item-title>
-                                                            <v-list-item-subtitle>100</v-list-item-subtitle>
+                                                            <v-list-item-title>Убийств на бегу</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_run }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
@@ -119,8 +203,8 @@
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>Смертей</v-list-item-title>
-                                                            <v-list-item-subtitle>100</v-list-item-subtitle>
+                                                            <v-list-item-title>Убийств в прыжке</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_jump }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
@@ -129,8 +213,8 @@
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>Ассистов</v-list-item-title>
-                                                            <v-list-item-subtitle>100</v-list-item-subtitle>
+                                                            <v-list-item-title>Убийств ослепленным</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_flash }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
@@ -139,8 +223,8 @@
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>K/D</v-list-item-title>
-                                                            <v-list-item-subtitle>1.0</v-list-item-subtitle>
+                                                            <v-list-item-title>Убийств в дыму</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_smoke }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
@@ -149,290 +233,149 @@
                                                 <v-list nav class="text-center" color="transparent">
                                                     <v-list-item link>
                                                         <v-list-item-content>
-                                                            <v-list-item-title>Попаданий</v-list-item-title>
-                                                            <v-list-item-subtitle>50%</v-list-item-subtitle>
+                                                            <v-list-item-title>Убийств с разворота</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_whirl }}</v-list-item-subtitle>
+                                                        </v-list-item-content>
+                                                    </v-list-item>
+                                                </v-list>
+                                            </v-col>
+                                            <v-col class="pa-0" cols="12" lg="15">
+                                                <v-list nav class="text-center" color="transparent">
+                                                    <v-list-item link>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title>Убийств последним патроном</v-list-item-title>
+                                                            <v-list-item-subtitle>{{ stats.unusualkills_lastclip }}</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
                                                 </v-list>
                                             </v-col>
                                         </v-row>
-                                    </v-card>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <v-row class="px-3">
-                                        <v-col class="pa-0" cols="12" lg="6">
-                                            <v-list nav class="text-center" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>Убийств Прострелом</v-list-item-title>
-                                                        <v-list-item-subtitle>100</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                        <v-col class="pa-0" cols="12" lg="6">
-                                            <v-list nav class="text-center" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>Убийств Без Прицела</v-list-item-title>
-                                                        <v-list-item-subtitle>100</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                        <v-col class="pa-0" cols="12" lg="6">
-                                            <v-list nav class="text-center" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>Убийств Слепым</v-list-item-title>
-                                                        <v-list-item-subtitle>100</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                        <v-col class="pa-0" cols="12" lg="6">
-                                            <v-list nav class="text-center" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>Убийств в Прыжке</v-list-item-title>
-                                                        <v-list-item-subtitle>100</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                        <v-col class="pa-0" cols="12" lg="6">
-                                            <v-list nav class="text-center" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>Убийств в Дым</v-list-item-title>
-                                                        <v-list-item-subtitle>100</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                        <v-col class="pa-0" cols="12" lg="6">
-                                            <v-list nav class="text-center" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>Убийств Гранатой</v-list-item-title>
-                                                        <v-list-item-subtitle>100</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                    </v-row>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <v-row align="center" justify="center">
-                                        <v-col cols="12" lg="6">
-                                            <v-text-field type="number" label="Сумма Пополнения" hide-details="auto"
-                                                          outlined>
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row align="center" justify="center">
-                                        <v-col cols="12" lg="6">
-                                            <v-btn color="success" block text>
-                                                Пополнить
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                </v-tab-item>
-                            </v-tabs-items>
-                        </v-tabs>
-                    </v-card>
-                </template>
-            </v-col>
-            <v-col cols="12" lg="12">
-                <template>
-                    <v-card dark color="rgba(32, 42, 55, 0.5)">
-                        <v-tabs grow background-color="transparent" color="primary" dark>
-                            <v-tab>
-                                Статистика по Оружию
-                            </v-tab>
-                            <v-tab>
-                                Статистика по Картам
-                            </v-tab>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                            </v-tabs>
+                        </v-card>
+                    </template>
+                </v-col>
+                <v-col cols="12" lg="12">
+                    <template>
+                        <v-card dark color="rgba(32, 42, 55, 0.5)">
+                            <v-tabs grow v-model="tab002" background-color="transparent" color="primary" dark>
+                                <v-tab>
+                                    Статистика по Оружию
+                                </v-tab>
+                                <v-tab>
+                                    Статистика по Картам
+                                </v-tab>
 
-                            <v-tabs-items dark style="background-color: rgba(32, 42, 55, 0);">
-                                <v-tab-item>
-                                    <v-row class="px-3">
-                                        <v-col class="pa-0" cols="12">
-                                            <v-list style="overflow-y: auto" max-height="405px" subheader
-                                                    class="text-right" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-avatar width="100px" height="50px" tile>
-                                                        <v-img contain style="filter: brightness(0) invert(1);"
-                                                               src="https://cybershoke.net/storage/images/weapons/weapon_ak47.svg">
-                                                        </v-img>
-                                                    </v-list-item-avatar>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>200</v-list-item-title>
-                                                        <v-list-item-subtitle>Убийств</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                                <v-list-item link>
-                                                    <v-list-item-avatar width="100px" height="50px" tile>
-                                                        <v-img contain style="filter: brightness(0) invert(1);"
-                                                               src="https://cybershoke.net/storage/images/weapons/weapon_awp.svg">
-                                                        </v-img>
-                                                    </v-list-item-avatar>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>150</v-list-item-title>
-                                                        <v-list-item-subtitle>Убийств</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                                <v-list-item link>
-                                                    <v-list-item-avatar width="100px" height="50px" tile>
-                                                        <v-img contain style="filter: brightness(0) invert(1);"
-                                                               src="https://cybershoke.net/storage/images/weapons/weapon_knife.svg">
-                                                        </v-img>
-                                                    </v-list-item-avatar>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>100</v-list-item-title>
-                                                        <v-list-item-subtitle>Убийств</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                </v-tab-item>
-                                <v-tab-item>
-
-                                    <v-row class="px-3">
-                                        <v-col class="pa-0" cols="12">
-                                            <v-list style="overflow-y: auto" max-height="405px" subheader
-                                                    class="text-right" color="transparent">
-                                                <v-list-item link>
-                                                    <v-list-item-avatar width="100px" height="50px" tile>
-                                                        <v-img contain src="../../../public/images/awp_lego_2.jpg">
-                                                        </v-img>
-                                                    </v-list-item-avatar>
-                                                    <v-list-item-content class="text-left">
-                                                        <v-list-item-title>awp_lego_2</v-list-item-title>
-                                                        <v-list-item-subtitle>W: 10 | L: 90</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>100</v-list-item-title>
-                                                        <v-list-item-subtitle>Матчей</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                                <v-list-item link>
-                                                    <v-list-item-avatar width="100px" height="50px" tile>
-                                                        <v-img contain src="../../../public/images/awp_lego_2.jpg">
-                                                        </v-img>
-                                                    </v-list-item-avatar>
-                                                    <v-list-item-content class="text-left">
-                                                        <v-list-item-title>awp_lego_2</v-list-item-title>
-                                                        <v-list-item-subtitle>W: 10 | L: 90</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>100</v-list-item-title>
-                                                        <v-list-item-subtitle>Матчей</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                                <v-list-item link>
-                                                    <v-list-item-avatar width="100px" height="50px" tile>
-                                                        <v-img contain src="../../../public/images/awp_lego_2.jpg">
-                                                        </v-img>
-                                                    </v-list-item-avatar>
-                                                    <v-list-item-content class="text-left">
-                                                        <v-list-item-title>awp_lego_2</v-list-item-title>
-                                                        <v-list-item-subtitle>W: 10 | L: 90</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>100</v-list-item-title>
-                                                        <v-list-item-subtitle>Матчей</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-col>
-                                    </v-row>
-
-                                </v-tab-item>
-                                <v-tab-item>
-
-                                    <v-row align="center" justify="center">
-                                        <v-col cols="12" lg="6">
-                                            <v-text-field type="number" label="Сумма Пополнения" hide-details="auto"
-                                                          outlined>
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row align="center" justify="center">
-                                        <v-col cols="12" lg="6">
-                                            <v-btn color="success" block text>
-                                                Пополнить
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-
-                                </v-tab-item>
-                            </v-tabs-items>
-                        </v-tabs>
-                    </v-card>
-                </template>
-            </v-col>
-        </v-row>
-    </v-col>
-    <v-col cols="12" lg="4">
-        <template>
-            <v-card link v-ripple dark color="rgba(32, 42, 55, 0.5)">
-                <v-img src="https://i.pinimg.com/originals/8f/bd/19/8fbd19742d2de4c375efb414a06955a2.png">
-                    <v-tooltip open-on-click top>
-                        <template v-slot:activator="{ on }">
-                            <a v-on="on"
-                               style="position: absolute; left: 38.1%; top: 8.27%; width: 25.17%; height: 22.65%; z-index: 2;"></a>
-                        </template>
-                        <span>Голова - 100 (100%)</span>
-                    </v-tooltip>
-                    <v-tooltip open-on-click top nudge-bottom="50">
-                        <template v-slot:activator="{ on }">
-                            <a v-on="on"
-                               style="position: absolute; left: 31.84%; top: 31.12%; width: 37.14%; height: 33.57%; z-index: 2;"></a>
-                        </template>
-                        <span>Тело - 0 (0%)</span>
-                    </v-tooltip>
-                    <v-tooltip open-on-click bottom>
-                        <template v-slot:activator="{ on }">
-                            <a v-on="on"
-                               style="position: absolute; left: 7.21%; top: 2.76%; width: 24.49%; height: 53.27%; z-index: 2;"></a>
-                        </template>
-                        <span>Л. Рука - 0 (0%)</span>
-                    </v-tooltip>
-                    <v-tooltip open-on-click top>
-                        <template v-slot:activator="{ on }">
-                            <a v-on="on"
-                               style="position: absolute; left: 69.25%; top: 31.12%; width: 21.9%; height: 45.51%; z-index: 2;"></a>
-                        </template>
-                        <span>П. Рука - 0 (0%)</span>
-                    </v-tooltip>
-                    <v-tooltip open-on-click left>
-                        <template v-slot:activator="{ on }">
-                            <a v-on="on"
-                               style="position: absolute; left: 30.48%; top: 65%; width: 24.49%; height: 34.8%; z-index: 2;"></a>
-                        </template>
-                        <span>Л. Нога - 0 (0%)</span>
-                    </v-tooltip>
-                    <v-tooltip open-on-click right>
-                        <template v-slot:activator="{ on }">
-                            <a v-on="on"
-                               style="position: absolute; left: 55.24%; top: 64.9%; width: 14.42%; height: 34.9%; z-index: 2;"></a>
-                        </template>
-                        <span>П. Нога - 0 (0%)</span>
-                    </v-tooltip>
-                </v-img>
-            </v-card>
-        </template>
-    </v-col>
-    <v-col cols="12" lg="6">
-        <template>
-            <v-btn @click="test = !test" color="red">
-                Сменить
-            </v-btn>
-            <v-btn @click="rtl()" color="red">
-                Сменить RTL
-            </v-btn>
-        </template>
-    </v-col>
-</v-row>
+                                <v-tabs-items dark style="background-color: rgba(32, 42, 55, 0);" v-model="tab002">
+                                    <v-tab-item>
+                                        <v-row class="px-3">
+                                            <v-col class="pa-0" cols="12">
+                                                <v-list style="overflow-y: auto" max-height="405px" subheader
+                                                        class="text-right" color="transparent">
+                                                    {% for weapon in weapons_stats %}
+                                                    <v-list-item link>
+                                                        <v-list-item-content class="text-left">
+                                                            <v-list-item-title>{{ weapon.weapon }}</v-list-item-title>
+                                                            <v-list-item-subtitle>Выстрелов: {{ weapon.shoots }}</v-list-item-subtitle>
+                                                        </v-list-item-content>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title>{{ weapon.kills }}</v-list-item-title>
+                                                            <v-list-item-subtitle>Убийств</v-list-item-subtitle>
+                                                        </v-list-item-content>
+                                                    </v-list-item>
+                                                    {% endfor %}
+                                                </v-list>
+                                            </v-col>
+                                        </v-row>
+                                    </v-tab-item>
+                                    <v-tab-item>
+                                        <v-row class="px-3">
+                                            <v-col class="pa-0" cols="12">
+                                                <v-list style="overflow-y: auto" max-height="405px" subheader
+                                                        class="text-right" color="transparent">
+                                                    {% for map in maps_stats %}
+                                                    <v-list-item link>
+                                                        <v-list-item-content class="text-left">
+                                                            <v-list-item-title>{{ map.name_map }}</v-list-item-title>
+                                                            <v-list-item-subtitle>Побед: {{ map.rounds_t + map.rounds_ct }}</v-list-item-subtitle>
+                                                        </v-list-item-content>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title>{{ map.countplays }}</v-list-item-title>
+                                                            <v-list-item-subtitle>Матчей</v-list-item-subtitle>
+                                                        </v-list-item-content>
+                                                    </v-list-item>
+                                                    {% endfor %}
+                                                </v-list>
+                                            </v-col>
+                                        </v-row>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                            </v-tabs>
+                        </v-card>
+                    </template>
+                </v-col>
+            </v-row>
+        </v-col>
+        <v-col cols="12" lg="4">
+            <template>
+                <v-card link v-ripple dark color="rgba(32, 42, 55, 0.5)">
+                    <v-img src="https://i.pinimg.com/originals/8f/bd/19/8fbd19742d2de4c375efb414a06955a2.png">
+                        <v-tooltip open-on-click top>
+                            <template v-slot:activator="{ on }">
+                                <a v-on="on"
+                                   style="position: absolute; left: 38.1%; top: 8.27%; width: 25.17%; height: 22.65%; z-index: 2;"></a>
+                            </template>
+                            <span>Голова - {{ stats.hits_head }} попаданий</span>
+                        </v-tooltip>
+                        <v-tooltip open-on-click top nudge-bottom="50">
+                            <template v-slot:activator="{ on }">
+                                <a v-on="on"
+                                   style="position: absolute; left: 31.84%; top: 31.12%; width: 37.14%; height: 33.57%; z-index: 2;"></a>
+                            </template>
+                            <span>Тело - {{ stats.hits_chest + stats.hits_stomach }} попаданий</span>
+                        </v-tooltip>
+                        <v-tooltip open-on-click bottom>
+                            <template v-slot:activator="{ on }">
+                                <a v-on="on"
+                                   style="position: absolute; left: 7.21%; top: 2.76%; width: 24.49%; height: 53.27%; z-index: 2;"></a>
+                            </template>
+                            <span>Л. Рука - {{ stats.hits_left_arm }} попаданий</span>
+                        </v-tooltip>
+                        <v-tooltip open-on-click top>
+                            <template v-slot:activator="{ on }">
+                                <a v-on="on"
+                                   style="position: absolute; left: 69.25%; top: 31.12%; width: 21.9%; height: 45.51%; z-index: 2;"></a>
+                            </template>
+                            <span>П. Рука - {{ stats.hits_right_arm }} попаданий</span>
+                        </v-tooltip>
+                        <v-tooltip open-on-click left>
+                            <template v-slot:activator="{ on }">
+                                <a v-on="on"
+                                   style="position: absolute; left: 30.48%; top: 65%; width: 24.49%; height: 34.8%; z-index: 2;"></a>
+                            </template>
+                            <span>Л. Нога - {{ stats.hits_left_leg }} попаданий</span>
+                        </v-tooltip>
+                        <v-tooltip open-on-click right>
+                            <template v-slot:activator="{ on }">
+                                <a v-on="on"
+                                   style="position: absolute; left: 55.24%; top: 64.9%; width: 14.42%; height: 34.9%; z-index: 2;"></a>
+                            </template>
+                            <span>П. Нога - {{ stats.hits_right_leg }} попаданий</span>
+                        </v-tooltip>
+                    </v-img>
+                </v-card>
+            </template>
+        </v-col>
+        <v-col cols="12" lg="6">
+            <template>
+                <v-btn @click="test = !test" color="red">
+                    Сменить
+                </v-btn>
+                <v-btn @click="rtl()" color="red">
+                    Сменить RTL
+                </v-btn>
+            </template>
+        </v-col>
+    </v-row>
 {% endblock %}

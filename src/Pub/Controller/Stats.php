@@ -4,8 +4,8 @@ namespace App\Pub\Controller;
 
 use App\Application;
 use App\Repository\Statistic;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class Stats extends AbstractController
 {
@@ -13,6 +13,7 @@ class Stats extends AbstractController
     {
         /** @var \App\Repository\Statistic $statisticRepo */
         $statisticRepo = Application::repository(Statistic::class);
-        dd($statisticRepo->getServerStatisticById(is_null($_GET['server']) ? 1 : $_GET['server']));
+
+        return $this->view->render($response, 'stats/index.html.twig');
     }
 }

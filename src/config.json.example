@@ -1,22 +1,16 @@
 {
   "web_db": {
-    "driver": "mysql",
     "host": "",
     "database": "",
     "username": "",
     "password": "",
-    "charset": "",
-    "collation": "",
-    "prefix": ""
+    "port": "3306"
   },
   "stats_db": {
-    "driver": "mysql",
     "host": "",
     "database": "",
     "username": "",
     "password": "",
-    "charset": "",
-    "collation": "",
-    "prefix": ""
+    "port": "3306"
   }
 }

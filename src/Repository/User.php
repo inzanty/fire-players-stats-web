@@ -8,6 +8,8 @@
 
 namespace App\Repository;
 
+use App\Util\Api\Steam;
+
 class User extends AbstractRepository
 {
     /**
@@ -43,5 +45,40 @@ class User extends AbstractRepository
         $stmt->execute();
 
         return $this->getUser($user['steam_id']);
+    }
+
+    /**
+     * @param $id
+     */
+    public function updateUserAvatar($id)
+    {
+        $stmt = $this->webDb->prepare("
+            UPDATE fps_web_players
+            SET avatar_icon = :avatar_icon,
+                avatar_full = :avatar_full
+            WHERE steam_id = :steam_id
+        ");
+        $profileData = (new Steam())->getProfileDataById($id);
+
+        $stmt->bindParam(':avatar_icon', $profileData['avatar_icon']);
+        $stmt->bindParam(':avatar_full', $profileData['avatar_full']);
+        $stmt->bindParam(':steam_id', $id);
+        $stmt->execute();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getUserAvatar($id)
+    {
+        $stmt = $this->webDb->prepare("
+            SELECT avatar_full 
+            FROM fps_web_players
+            WHERE steam_id = ?
+        ");
+
+        $stmt->execute([$id]);
+        return $stmt->fetchColumn();
     }
 }
