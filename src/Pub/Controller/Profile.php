@@ -37,13 +37,12 @@ class Profile extends AbstractController
                 /** @var \App\Repository\Statistic $statsRepo */
                 $statsRepo = Application::repository(Statistic::class);
 
-                $st = new \SteamID(1153411562);
                 return $this->view->render($response, 'profile/index.html.twig', [
                     'profile_data' => $userRepo->getUser($params['steam_id'])[0],
-                    'stats' => $playerRepo->getPlayerStats($st->ConvertToUInt64())[0],
-                    'maps_stats' => $playerRepo->getMapsStats(1153411562),
-                    'weapons_stats' => $playerRepo->getWeaponsStats(1153411562),
-                    'servers_stats' => $statsRepo->fetchServersStatisticById(1153411562)
+                    'stats' => $playerRepo->getPlayerStats($params['steam_id'])[0],
+                    'maps_stats' => $playerRepo->getMapsStats($params['steam_id']),
+                    'weapons_stats' => $playerRepo->getWeaponsStats($params['steam_id']),
+                    'servers_stats' => $statsRepo->fetchServersStatisticById($params['steam_id'])
                 ]);
             }
         }
