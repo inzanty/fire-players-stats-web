@@ -54,11 +54,19 @@ class Application
      */
     public function boot()
     {
+        // error-handler settings
+        error_reporting(0);
+
         // to avoid slim conflict
         session_cache_limiter(false);
         session_start();
 
         $config = new Manager();
+
+        if ($config->get('app')['debug'])
+        {
+            error_reporting(E_ALL);
+        }
 
         $dependencyProvider = (new DependencyProvider($config))->register();
 

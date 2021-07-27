@@ -12,17 +12,17 @@
                                     <v-list-item-avatar size="135px">
                                         <v-avatar size="135px" class="mr-2">
                                             <v-img
-                                                    src="{{ avatar }}">
+                                                    src="{{ profile_data.avatar_full }}">
                                             </v-img>
                                         </v-avatar>
                                     </v-list-item-avatar>
                                     <v-list-item-content>
                                         <v-card-title class="ml-5 mb-0">
-                                            {{ session.nickname }}
+                                            {{ profile_data.nickname }}
                                         </v-card-title>
                                     </v-list-item-content>
                                     <v-list-item-action>
-                                        <v-btn icon>
+                                        <v-btn icon href="https://steamcommunity.com/profile/{{ profile_data.steam_id }}">
                                             <v-icon>
                                                 mdi-steam
                                             </v-icon>
@@ -66,9 +66,9 @@
                                                     <v-list nav class="text-center" color="transparent">
                                                         <v-list-item link>
                                                             <v-list-item-content>
-                                                                <v-list-item-title>Проведенное время на сервере</v-list-item-title>
+                                                                <v-list-item-title>Проведенное время на серверах</v-list-item-title>
                                                                 <v-list-item-subtitle>
-                                                                    {{ (max(stats.playtime, 1) / 3600)|round }} часа/часов
+                                                                    {{ (max(stats.playtime, 1) / 3600)|round }} ч
                                                                 </v-list-item-subtitle>
                                                             </v-list-item-content>
                                                         </v-list-item>
@@ -248,6 +248,9 @@
                                 <v-tab>
                                     Статистика по Картам
                                 </v-tab>
+                                <v-tab>
+                                    Статистика по Серверам
+                                </v-tab>
 
                                 <v-tabs-items dark style="background-color: rgba(32, 42, 55, 0);" v-model="tab002">
                                     <v-tab-item>
@@ -287,6 +290,33 @@
                                                             <v-list-item-subtitle>Матчей</v-list-item-subtitle>
                                                         </v-list-item-content>
                                                     </v-list-item>
+                                                    {% endfor %}
+                                                </v-list>
+                                            </v-col>
+                                        </v-row>
+                                    </v-tab-item>
+                                    <v-tab-item>
+                                        <v-row class="px-3">
+                                            <v-col class="pa-0" cols="12">
+                                                <v-list style="overflow-y: auto" max-height="405px" subheader
+                                                        class="text-right" color="transparent">
+                                                    {% for server in servers_stats %}
+                                                        <v-list-item link>
+                                                            <v-list-item-content class="text-left">
+                                                                <v-list-item-title>{{ server.server_name }}</v-list-item-title>
+                                                                <v-list-item-subtitle>
+                                                                    Побед: {{ server.round_win }} • Поражений: {{ server.round_lose }} • Поинтов: {{ max(server.points, 1)|round }}
+                                                                    <br />
+                                                                    Убийств: {{ server.kills }} • Смертей: {{ server.deaths }} • K/D: {{ ((server.kills + server.assists) / max(server.deaths, 1))|round }}
+                                                                    <br />
+                                                                    Проведенное время на сервере: {{ (max(server.playtime, 1) / 3600)|round }} ч
+                                                                </v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>{{ ((server.round_win * 100) / (server.round_win + max(server.round_lose, 1)))|round }}% / {{ ((server.round_lose * 100 ) / (server.round_lose + max(server.round_win, 1)))|round }}%</v-list-item-title>
+                                                                <v-list-item-subtitle>Процент побед и поражений</v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
                                                     {% endfor %}
                                                 </v-list>
                                             </v-col>

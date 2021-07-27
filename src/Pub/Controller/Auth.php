@@ -32,7 +32,7 @@ class Auth extends AbstractController
         if (!$openId->mode)
         {
             $openId->identity = self::STEAM_URL;
-            header('Location: ' . $openId->authUrl());
+            return $response->withHeader('Location', $openId->authUrl());
         }
         else if ($openId->mode == 'id_res' && $openId->validate())
         {

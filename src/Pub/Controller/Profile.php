@@ -4,6 +4,7 @@ namespace App\Pub\Controller;
 
 use App\Application;
 use App\Repository\Player;
+use App\Repository\Statistic;
 use App\Repository\User;
 use App\Util\Api\Steam;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -33,13 +34,16 @@ class Profile extends AbstractController
                 /** @var \App\Repository\User $userRepo */
                 $userRepo = Application::repository(User::class);
 
+                /** @var \App\Repository\Statistic $statsRepo */
+                $statsRepo = Application::repository(Statistic::class);
+
                 $st = new \SteamID(1153411562);
                 return $this->view->render($response, 'profile/index.html.twig', [
-                    'avatar' => $userRepo->getUserAvatar($params['steam_id']),
+                    'profile_data' => $userRepo->getUser($params['steam_id'])[0],
                     'stats' => $playerRepo->getPlayerStats($st->ConvertToUInt64())[0],
-                    //'stats' => $userRepo->getUserAvatar($params['steam_id']),
                     'maps_stats' => $playerRepo->getMapsStats(1153411562),
-                    'weapons_stats' => $playerRepo->getWeaponsStats(1153411562)
+                    'weapons_stats' => $playerRepo->getWeaponsStats(1153411562),
+                    'servers_stats' => $statsRepo->fetchServersStatisticById(1153411562)
                 ]);
             }
         }

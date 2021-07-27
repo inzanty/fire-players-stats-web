@@ -26,13 +26,8 @@ class Server extends AbstractController
     {
         /** @var \App\Repository\Server $serverRepository */
         $serverRepository = Application::repository(ServerRepository::class);
-        $paginationParams = $this->paginate(
-            $serverRepository->getCount(), is_null($_GET['page']) ? 1 : $_GET['page']
-        );
-
         return $this->view->render($response, 'server/index.html.twig', [
-            'pagination' => $paginationParams,
-            'servers' => $serverRepository->findAll($paginationParams['start'], $paginationParams['limit'])
+            'servers' => $serverRepository->findAll()
         ]);
     }
 }

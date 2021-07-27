@@ -65,20 +65,4 @@ class User extends AbstractRepository
         $stmt->bindParam(':steam_id', $id);
         $stmt->execute();
     }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function getUserAvatar($id)
-    {
-        $stmt = $this->webDb->prepare("
-            SELECT avatar_full 
-            FROM fps_web_players
-            WHERE steam_id = ?
-        ");
-
-        $stmt->execute([$id]);
-        return $stmt->fetchColumn();
-    }
 }

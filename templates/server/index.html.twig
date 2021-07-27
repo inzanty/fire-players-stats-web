@@ -15,8 +15,9 @@
                             <v-row justify="center">
                                 <v-col cols="12" lg="12">
                                     {% for server in servers %}
-                                        <v-card>
-                                            <v-img height="200px" class="">
+                                        <v-card dark color="transparent">
+                                            <v-img height="280px"
+                                                   src="https://wallpapercave.com/wp/wp2911121.jpg">
                                                 <v-row class="fill-height">
                                                     <v-col cols="12">
                                                         <v-card-title>
@@ -26,17 +27,10 @@
                                                     </v-col>
                                                     <v-col cols="12" class="py-0">
                                                         <v-row class="fill-height" align="end">
-                                                            <v-col cols="6" class="pa-0">
+                                                            <v-col cols="15" class="pa-0">
                                                                 <v-btn href="steam://connect/{{ server.server_ip }}" tile block text>
                                                                     <v-icon>
                                                                         mdi-play-circle
-                                                                    </v-icon>
-                                                                </v-btn>
-                                                            </v-col>
-                                                            <v-col cols="6" class="pa-0">
-                                                                <v-btn tile block text>
-                                                                    <v-icon>
-                                                                        mdi-content-copy
                                                                     </v-icon>
                                                                 </v-btn>
                                                             </v-col>
