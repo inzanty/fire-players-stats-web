@@ -1,5 +1,22 @@
 {
+    "name": "inzanty/fire-players-stats-web",
+    "type": "project",
+    "description": "Web interface for Fire Players Stats",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Nazar Nosko",
+            "email": "inzanty@gmail.com",
+            "homepage": "https://github.com/inzanty"
+        },
+        {
+            "name": "Maxim Telezhenko",
+            "email": "zlo911111@gmail.com",
+            "homepage": "https://github.com/Kailo97"
+        }
+    ],
     "require": {
+        "php": ">=7.3",
         "slim/slim": "4.*",
         "guzzlehttp/psr7": "^1.8",
         "http-interop/http-factory-guzzle": "^1.0",

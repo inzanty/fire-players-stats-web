@@ -41,15 +41,6 @@ class Application
     public static $container;
 
     /**
-     * @var string[]
-     */
-    protected $logType = [
-        'error',
-        'exception',
-        'warning'
-    ];
-
-    /**
      * @throws \Exception
      */
     public function boot()
@@ -99,9 +90,12 @@ class Application
      */
     public static function repository($class)
     {
-        if (class_exists($class))
+        if (strpos('App\Repository', $class) !== 0)
         {
-            return new $class();
+            if (class_exists($class))
+            {
+                return new $class();
+            }
         }
 
         throw new \Exception(sprintf("Repository class %s didn't exists", $class));
@@ -125,18 +119,5 @@ class Application
     public static function getStatsDb()
     {
         return self::$container->get('stats_db');
-    }
-
-    /**
-     * @return App
-     */
-    public static function getInstance(): App
-    {
-        return self::$app;
-    }
-
-    public static function getConfig()
-    {
-        return self::$container->get('config');
     }
 }

@@ -14,7 +14,7 @@
 
 <div id="app">
     <v-app
-            style="background-image: url(https://million-wallpapers.ru/wallpapers/2/88/474971843067839.jpg) !important;background-repeat: no-repeat;background-position: center center;background-attachment: fixed;background-size: cover;">
+            style="background-image: url({{ base_path() }}'assets/images/background.jpg') !important;background-repeat: no-repeat;background-position: center center;background-attachment: fixed;background-size: cover;">
         <template>
             <v-navigation-drawer :right="this.$vuetify.rtl" floating permanent expand-on-hover dark
                                  color="rgb(32, 42, 55)" app>
