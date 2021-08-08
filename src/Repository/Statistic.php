@@ -3,15 +3,38 @@
 namespace App\Repository;
 
 class Statistic extends AbstractRepository
-{
+{ 
     /**
-     * @param $id
+     * getServerStatisticById
+     *
+     * @param  mixed $id
+     * @param  mixed $skip
+     * @param  mixed $limit
      * @return array
      */
-    public function getServerStatisticById($id): array
+    public function getServerStatisticById($id, $skip, $limit, ?string $sort=null): array
     {
-        $stmt = $this->statsDb->prepare("SELECT * FROM fps_servers_stats WHERE server_id = ?");
-        $stmt->execute([$id]);
+        $sort = $sort ?? '`id`';
+        $stmt = $this->statsDb->prepare("SELECT 
+            `nickname`, 
+            `points`, 
+            `rank`, 
+            `kills`, 
+            `deaths`, 
+            `assists`, 
+            `round_max_kills`, 
+            `round_win`, 
+            `round_lose` 
+            FROM fps_servers_stats 
+            JOIN fps_players
+            USING (account_id)
+            WHERE server_id = ? 
+            ORDER BY $sort 
+            LIMIT ?, ?");
+        $stmt->bindValue(1, $id, \PDO::PARAM_INT);
+        $stmt->bindValue(2, $skip, \PDO::PARAM_INT);
+        $stmt->bindValue(3, $limit, \PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
@@ -46,8 +69,8 @@ class Statistic extends AbstractRepository
      */
     public function getCountById($id): int
     {
-        $stmt = $this->statsDb->query("SELECT * FROM fps_servers_stats WHERE server_id = ?");
-        $stmt->execute();
-        return $stmt->rowCount();
+        $stmt = $this->statsDb->prepare("SELECT COUNT(*) FROM fps_servers_stats WHERE server_id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetchColumn();
     }
 }

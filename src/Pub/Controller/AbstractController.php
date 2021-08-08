@@ -3,7 +3,6 @@
 namespace App\Pub\Controller;
 
 use DI\Container;
-use GuzzleHttp\Psr7\Response;
 use Slim\Views\Twig;
 
 abstract class AbstractController
@@ -36,7 +35,7 @@ abstract class AbstractController
      * @param int $limit
      * @return array
      */
-    public function paginate(int $count, string $args, int $limit = 15): array
+    public function paginate(int $count, int $args, int $limit = 15): array
     {
         $pages = ceil($count / $limit);
         $args = ($args > $pages) ? $pages : $args;

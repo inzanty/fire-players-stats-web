@@ -2,21 +2,77 @@
 
 {% block body %}
     <template>
-        <v-data-table style="background-color: rgba(32, 42, 55, 0.5);" dark :headers="headers" :items="tableItems"
-                      class="elevation-1">
-            <template v-slot:item.username="{item}">
-                <v-avatar size="32">
-                    <v-img contain :src="item.user.avatar">
-                    </v-img>
-                </v-avatar>
-                ### item.user.username ###
-            </template>
-            <template v-slot:item.rank="{item}">
-                <v-avatar size="64" tile>
-                    <v-img contain :src="item.rank">
-                    </v-img>
-                </v-avatar>
+        <v-data-table style="background-color: rgba(32, 42, 55, 0.5);" dark class="elevation-1"
+            :headers="headers"
+            :multi-sort="true"
+            :server-items-length="total"
+            :loading="loading"
+            :options="options"
+            @update:options="options = $event"
+            :items="items"
+            :footer-props="{disableItemsPerPage: true, showCurrentPage: true, showFirstLastPage: true}"
+        >
+            <template v-slot:header.round_max_kills="{ header }">
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <span
+                            v-bind="attrs"
+                            v-on="on"
+                        >### header.text ###</span>
+                    </template>
+                    <span>### header.tooltip ###</span>
+                </v-tooltip>
             </template>
         </v-data-table>
     </template>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        module_data = {
+            total: 0,
+            loading: true,
+            options: {
+                page: {{ pagination.page }},
+                itemsPerPage: 15
+            },
+            headers: [
+                {text: 'Имя', value: 'nickname', sortable: false},
+                {text: 'Очки', value: 'points'},
+                {text: 'Ранг', value: 'rank'},
+                {text: 'Убийства', value: 'kills'},
+                {text: 'Смерти', value: 'deaths'},
+                {text: 'Ассисты', value: 'assists'},
+                {text: 'Макс. УЗР', value: 'round_max_kills', tooltip: 'Макс. убийств за раунд'},
+                {text: 'Выиграно раундов', value: 'round_win', tooltip: 'Макс. убийств за раунд'},
+                {text: 'Проигранных раундов', value: 'round_lose', tooltip: 'Макс. убийств за раунд'}
+            ],
+            items: []
+        }
+        module_methods = {
+            getDataFromApi() {
+                this.loading = true
+                this.fakeApiCall().then(({data}) => {
+                    this.items = data.items
+                    this.total = data.total
+                    this.loading = false
+                })
+            },
+            fakeApiCall() {
+                const { sortBy, sortDesc, page, itemsPerPage } = this.options
+                return axios.get(`/stats/load?page=${page}&`+sortBy.map((val, i) => `sortBy[]=${val}&sortDesc[]=${+sortDesc[i]}`).join('&'))
+            }
+        }
+        module_fields = {
+            watch: {
+                options: {
+                    handler() {
+                        this.getDataFromApi()
+                    },
+                    deep: true,
+                },
+            },
+        }
+    </script>
 {% endblock %}

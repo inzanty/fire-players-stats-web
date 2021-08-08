@@ -125,6 +125,11 @@
     </v-app>
 </div>
 
+<script>
+    var module_data = {};
+    var module_methods = {};
+    var module_fields = {};
+</script>
 {% block javascripts %}
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
@@ -147,8 +152,13 @@
             tab001: null,
             tab002: null,
             tab003: null,
-            test: true
+            test: true,
+            ...module_data
         },
+        methods: {
+            ...module_methods
+        },
+        ...module_fields
     });
 </script>
 </body>
