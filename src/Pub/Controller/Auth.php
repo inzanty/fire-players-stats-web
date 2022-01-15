@@ -42,19 +42,28 @@ class Auth extends AbstractController
 
             $steamInstance = new Steam();
 
-            /** @var User $playerRepository */
-            $playerRepository = Application::repository(User::class);
-            $player = $playerRepository->getUser($matches[1]);
+            /** @var User $userRepository */
+            $userRepository = Application::repository(User::class);
+            $player = $userRepository->getUser($matches[1]);
+			$profileData = $steamInstance->getProfileDataById($matches[1]);
+
             if (!$player)
             {
-                $profileData = $steamInstance->getProfileDataById($matches[1]);
-                $player = $playerRepository->createUser([
+                $player = $userRepository->createUser([
                     'nickname' => $profileData['nickname'],
                     'steam_id' => $matches[1],
                     'avatar_icon' => $profileData['avatar_icon'],
                     'avatar_full' => $profileData['avatar_full']
                 ]);
             }
+
+			if (
+				$player[0]['nickname'] != $profileData['nickname']
+				|| $player[0]['avatar_icon'] != $profileData['avatar_icon']
+			)
+			{
+				$userRepository->updateUser($player[0]['steam_id']);
+			}
 
             $_SESSION['nickname'] = $player[0]['nickname'];
             $_SESSION['steam_id'] = $player[0]['steam_id'];

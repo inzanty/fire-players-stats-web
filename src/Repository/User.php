@@ -50,16 +50,18 @@ class User extends AbstractRepository
     /**
      * @param $id
      */
-    public function updateUserAvatar($id)
+    public function updateUser($id)
     {
         $stmt = $this->webDb->prepare("
             UPDATE fps_web_players
-            SET avatar_icon = :avatar_icon,
+            SET nickname = :nickname,
+                avatar_icon = :avatar_icon,
                 avatar_full = :avatar_full
             WHERE steam_id = :steam_id
         ");
         $profileData = (new Steam())->getProfileDataById($id);
 
+		$stmt->bindParam(':nickname', $profileData['nickname']);
         $stmt->bindParam(':avatar_icon', $profileData['avatar_icon']);
         $stmt->bindParam(':avatar_full', $profileData['avatar_full']);
         $stmt->bindParam(':steam_id', $id);

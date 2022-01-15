@@ -38,7 +38,10 @@ class Stats extends AbstractController
         );
         // TODO: secure or filter params because we pass it into query
         $sort = !$params['sortBy'] ? null :
-            join(', ', array_map(fn($by, $desc) => "`$by` ".($desc ? 'DESC' : 'ASC'), $params['sortBy'], $params['sortDesc']));
+            join(', ', array_map(function ($by, $desc) {
+				return "`$by` " . ($desc ? 'DESC' : 'ASC');
+			}, $params['sortBy'], $params['sortDesc']));
+
         $data = [
             'items' => $statisticRepo->getServerStatisticById($server, $paginationParams['start'], $paginationParams['limit'], $sort),
             'total' => $paginationParams['total']
